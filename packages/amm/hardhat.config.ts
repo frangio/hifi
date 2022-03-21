@@ -3,11 +3,12 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-packager";
 import "solidity-coverage";
+import "solidity-docgen";
 
 import "./tasks/deploy";
 import "./tasks/init";
 
-import { resolve } from "path";
+import { resolve, relative } from "path";
 
 import { getChainConfig, getEnvVar } from "@hifi/helpers";
 import { config as dotenvConfig } from "dotenv";
@@ -83,6 +84,12 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "src/types",
     target: "ethers-v5",
+  },
+  docgen: {
+    templates: "../../templates",
+    pages: (item, file) => file.absolutePath.startsWith('contracts')
+      ? relative('contracts', file.absolutePath).replace('.sol', '.md')
+      : undefined,
   },
 };
 
